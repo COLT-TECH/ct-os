@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "terminal.h"
+#include "standard.h"
 
 #define ENTER     0x1C
 #define BACKSPACE 0x0E
