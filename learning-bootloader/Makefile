@@ -1,3 +1,7 @@
 default:
-	nasm src/boot.asm -o boot.bin
-	qemu-system-i386 boot.bin
+	rm *.iso
+	rm src/*.bin
+	nasm -f bin src/boot.asm -o src/boot.bin
+	xorriso -as mkisofs -b src/boot.bin -no-emul-boot -o boot.iso .
+	qemu-system-i386 -cdrom boot.iso
+	

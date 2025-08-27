@@ -52,7 +52,6 @@ GDT_Descriptor:
 ; Functions
 clear_screen:
     pusha
-    mov eax, 0x00000
     mov ebx, 0xB8000
     mov al, ' '
     mov ah, 0x0F
@@ -60,7 +59,7 @@ clear_screen:
     cmp ebx, 0xB8000+2000
     je .clear_return
 
-    mov [ebx], eax
+    mov [ebx], ax
 
     times 2 inc ebx
     jmp .clear_loop
@@ -70,7 +69,6 @@ clear_screen:
 
 print:
     pusha
-    mov eax, 0x00000
     mov ebx, 0xB8000
     mov ah, 0x0F
 .print_loop:
@@ -78,7 +76,7 @@ print:
     cmp al, 0
     je .print_return
 
-    mov [ebx], eax
+    mov [ebx], ax
 
     inc si
     times 2 inc ebx
@@ -103,7 +101,7 @@ start_protected_mode:
 
 BOOT_DISK: db 0
 
-msg: db "Successfully switched to 32-bit real mode!", 0
+msg: db "Successfully switched to 32-bit protected mode!", 0
 
 times 510-($-$$) db 0
 dw 0xAA55
