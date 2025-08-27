@@ -1,3 +1,3 @@
 default:
-	nasm boot.asm -o boot.bin
+	nasm src/boot.asm -o boot.bin
 	qemu-system-i386 boot.bin
