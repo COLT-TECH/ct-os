@@ -1,99 +1,110 @@
 [org 0x7C00]
 [bits 16]
 
-jmp main
+; store disk number in variable
+mov [BOOT_DISK], dl
+
+CODE_SEG equ GDT_code - GDT_Start
+DATA_SEG equ GDT_data - GDT_Start
+
+; Enter 32-Bit Protected mode
+cli
+lgdt [GDT_Descriptor]
+; change the last bit of cr0 to 1
+mov eax, cr0
+or eax, 1
+mov cr0, eax
+jmp CODE_SEG:start_protected_mode
+
+hlt
+jmp $
+
+
+; GDT
+GDT_Start:
+    GDT_null:
+        dd 0x0
+        dd 0x0 
+    GDT_code:
+        dw word 0xFFFF ; Limit
+        dw 0x0 ; 16 bits +
+        db 0x0 ; 8 bits = 24 bits of the base
+        db 0b10011010 ; pres, priv, type, and type flags
+        db 0b11001111
+        db 0x0 ; last 8 bits of the base 24 + 8 = 32 bits
+    GDT_data:
+        dw word 0xFFFF
+        dw 0x0
+        db 0x0
+        db 0b10010010
+        db 0b11001111
+        db 0x0
+GDT_End:
+
+GDT_Descriptor:
+    dw GDT_End - GDT_Start - 1 ; size
+    dd GDT_Start ; start
+
+; END OF 16-BIT CODE
+
+[bits 32]
+
+; Functions
+clear_screen:
+    pusha
+    mov eax, 0x00000
+    mov ebx, 0xB8000
+    mov al, ' '
+    mov ah, 0x0F
+.clear_loop:
+    cmp ebx, 0xB8000+2000
+    je .clear_return
+
+    mov [ebx], eax
+
+    times 2 inc ebx
+    jmp .clear_loop
+.clear_return:
+    popa
+    ret
 
 print:
-	pusha
-	mov ah, 0x0E
-	jmp .print_loop
+    pusha
+    mov eax, 0x00000
+    mov ebx, 0xB8000
+    mov ah, 0x0F
 .print_loop:
-	mov al, [si]
-	cmp al, 0
-	je .print_return
+    mov al, [si]
+    cmp al, 0
+    je .print_return
 
-	int 0x10
-	inc si
+    mov [ebx], eax
 
-	jmp .print_loop
+    inc si
+    times 2 inc ebx
+
+    jmp .print_loop
 .print_return:
-	popa
-	ret
-
-newline:
-	pusha
-	mov ah, 0x0E
-	mov al, 0x0D
-	int 0x10
-	mov al, 0x0A
-	int 0x10
-	popa
-	ret
+    popa
+    ret
 
 
-main:
-	; 0 all segment registers
-	mov ax, 0
-	mov ds, ax
-	mov es, ax
-	mov cs, ax
-	
-	; Setup Stack
-	mov ss, ax
-	mov sp, 0x7C00
 
-	mov si, msg
-	call print
-	call newline
+start_protected_mode:
+    call clear_screen
+    
+    mov si, msg
+    call print
 
-	; store disk number in variable
-	mov [disk_num], dl
+    hlt
+    jmp $
 
-	; access next sector
-	mov ah, 2
-	mov al, 1 ; how many sectors to read
-	mov ch, 0 ; cylinder number
-	mov cl, 2 ; sector number
-	mov dh, 0 ; head number
-	mov dl, [disk_num] ; drive number
-	mov es, ax ;     \/
-	mov bx, 0x7E00 ; pointer to where we want to load the sector
-	int 0x13
-	
-	jc error_cf
 
-	cmp al, 1
-	jne error_al
 
-	mov ah, 0x0E
-	mov al, es:[0x7E00]
-	int 0x10
-	
-	jmp halt
+BOOT_DISK: db 0
 
-error_cf:
-	call newline
-	mov si, err_cf
-	call print
-
-error_al:
-	call newline
-	mov si, err_al
-	call print
-
-halt:
-	cli
-	hlt
-
-disk_num: db 0
-msg: db "Booted!", 0
-err_cf: db "ERROR CF", 0
-err_al: db "ERROR AL", 0
+msg: db "Successfully switched to 32-bit real mode!", 0
 
 times 510-($-$$) db 0
 dw 0xAA55
-
-; in next sector
-times 511 db 'A'
-times 1 db 0
 
