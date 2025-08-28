@@ -1,0 +1,100 @@
+#include "../include/terminal.h"
+
+size_t terminal_row; // To keep track of cursor/text position
+size_t terminal_column;
+uint8_t terminal_color; // Text color
+uint16_t* terminal_buffer; // Pointer to vga text buffer
+
+void terminal_init(void) {
+    terminal_row = 0;
+    terminal_column = 0;
+    terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+    terminal_buffer = (uint16_t*)VGA_MEMORY;
+
+    for (size_t y = 0; y < VGA_HEIGHT; y++) {
+        for (size_t x = 0; x < VGA_WIDTH; x++) {
+            const size_t index = y * VGA_WIDTH + x;
+            terminal_buffer[index] = vga_entry(' ', terminal_color);
+        }
+    }
+}
+
+void terminal_setcolor(uint8_t color) {
+    terminal_color = color;
+}
+
+void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
+    const size_t index = y * VGA_WIDTH + x;
+    terminal_buffer[index] = vga_entry(c, color);
+}
+
+void terminal_putchar(unsigned char c) {
+    terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+
+    if (++terminal_column == VGA_WIDTH) {
+        terminal_column = 0;
+        if (++terminal_row == VGA_HEIGHT) {
+            terminal_row = 0;
+        }
+    }
+}
+
+void terminal_write(const char* text, ...) {
+    va_list variables;
+    va_start(variables, text);
+
+    size_t size = strlen(text);
+
+    // Check if at the end of screen and move to new line
+    if (terminal_row > VGA_HEIGHT) {
+        terminal_clear();
+        terminal_row = 0;
+        terminal_column = 0;
+    }
+
+    for (size_t i = 0; i < size; i++) {
+        // Check for newline character
+        if (text[i] == '\n') {
+            terminal_row++;
+            terminal_column = 0;
+        }
+        // Check for passed variables
+        else if (text[i] == '%') {
+            switch (text[i+1]) {
+                // String
+                case 's':
+                    i++;
+                    const char* string = va_arg(variables, char*);
+                    const size_t strlength = strlen(string);
+                    for (size_t y = 0; y < strlength; y++) terminal_putchar(string[y]);
+                    break;
+                // Char
+                case 'c':
+                    i++;
+                    const char ch = va_arg(variables, int);
+                    terminal_putchar(ch);
+                    break;
+                default:
+                    terminal_putchar('%');
+                    break;
+            }
+        }
+        else {
+            terminal_putchar(text[i]);
+        }
+    }
+
+    va_end(variables);
+}
+
+void terminal_clear(void) {
+    for (size_t y = 0; y < VGA_HEIGHT; y++) {
+        for (size_t x = 0; x < VGA_WIDTH; x++) {
+            const size_t index = y * VGA_WIDTH + x;
+            terminal_buffer[index] = vga_entry(' ', terminal_color);
+        }
+    }
+    
+    terminal_row = 0;
+    terminal_column = 0;
+}
