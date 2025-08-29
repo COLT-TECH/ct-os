@@ -26,7 +26,7 @@ int 0x13
 
 ; switch to text mode
 mov ah, 0x0
-mov al, 0x3
+mov ax, 0x13
 int 0x10
 
 
@@ -40,7 +40,7 @@ lgdt [GDT_Descriptor]
 mov eax, cr0
 or eax, 1
 mov cr0, eax
-jmp CODE_SEG:start_protected_mode
+jmp CODE_SEG:start_protected_mode ; far jump
 
 hlt
 jmp $
@@ -125,15 +125,15 @@ start_protected_mode:
     mov ebp, 0x90000
     mov esp, ebp
 
-    mov si, msg
-    call print
+    ;mov si, msg
+    ;call print
     
     jmp KERNEL_LOCATION
 
     hlt
     jmp $
 
-msg: db "Successfully switched to 32-bit protected mode!", 0
+;msg: db "Successfully switched to 32-bit protected mode!", 0
 
 times 510-($-$$) db 0
 dw 0xAA55
