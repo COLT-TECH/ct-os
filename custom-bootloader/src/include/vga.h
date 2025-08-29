@@ -12,5 +12,6 @@ extern uint8_t video_x;
 extern uint8_t video_y;
 
 void plot_pixel(int x, int y, uint8_t color);
+void plot_character_array(const int array[65], int x, int y, uint8_t color);
 
 #endif
