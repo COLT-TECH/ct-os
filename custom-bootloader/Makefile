@@ -7,11 +7,11 @@ ZEROS = src/boot/zeros.asm
 
 USB = /dev/sda
 
-LIBOBJ = "build/vga.o" "build/character_arrays.o"
+LIBOBJ = "build/vga.o" "build/font.o"
 
 default:
 	@i386-elf-gcc $(CFLAGS) -c src/lib/vga.c -o build/vga.o
-	@i386-elf-gcc $(CFLAGS) -c src/lib/character_arrays.c -o build/character_arrays.o
+	@i386-elf-gcc $(CFLAGS) -c src/lib/font8x8_basic.c -o build/font.o
 
 	@i386-elf-gcc $(CFLAGS) -c $(KERNEL) -o build/kernel.o
 	@nasm $(KERNEL_ENTRY) -f elf -o build/kernel_entry.o
