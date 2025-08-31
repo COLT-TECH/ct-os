@@ -1,5 +1,4 @@
 #include "../include/svga.h"
-#include <stdint.h>
 
 uint16_t *framebuffer;
 uint16_t scanline;

@@ -2,7 +2,7 @@
 #define SVGA_H
 
 #include <stdint.h>
-#include "font8x8_basic.h"
+#include "font8x8.h"
 
 void svga_init();
 void plot_pixel(int x, int y, uint16_t color);

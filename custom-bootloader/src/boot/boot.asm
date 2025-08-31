@@ -24,19 +24,18 @@ mov cl, 0x02
 mov dl, [BOOT_DISK]
 int 0x13
 
-; get vbe information
+; get vbe mode information
 mov ax, 0x4F01
 mov cx, 0x0117
 mov di, 0x7E00
 int 0x10
 
-
-; switch to vbe mode 640x480 (0x0111)
+; switch to vbe mode 1024x768x16 (0x0117)
 mov ax, 0x4F02
 mov bx, 0x4117
 int 0x10
 
-; vbe mode switching error checking
+; vbe mode switch error checking
 cmp ax, 0x004F
 je VBE_SUCCESS
 
@@ -45,11 +44,23 @@ VBE_ERROR:
     int 0x10
 
     mov ah, 0x0E
-    mov al, 'E'
+    mov si, vbe_err
+
+.vbe_loop:
+    cmp [si], byte 0
+    je .vbe_halt
+
+    mov al, [si]
     int 0x10
 
+    inc si
+    jmp .vbe_loop
+
+.vbe_halt:
     hlt
     jmp $
+
+vbe_err: db "ERROR: VESA MODE SWITCH UNSUCCESSFUL", 0
 
 VBE_SUCCESS:
 

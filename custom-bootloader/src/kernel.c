@@ -6,7 +6,7 @@
 extern void kernel_main() {
     svga_init();
 
-    plot_string("Hello World!\0", 50, 50);
+    plot_string("Hello World!\0", 0, 0);
 
     return;
 }
