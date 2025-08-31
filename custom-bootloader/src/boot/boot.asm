@@ -24,11 +24,34 @@ mov cl, 0x02
 mov dl, [BOOT_DISK]
 int 0x13
 
-; switch to mode 12h
-mov ah, 0x00
-mov al, 0x12
+; get vbe information
+mov ax, 0x4F01
+mov cx, 0x0117
+mov di, 0x7E00
 int 0x10
 
+
+; switch to vbe mode 640x480 (0x0111)
+mov ax, 0x4F02
+mov bx, 0x4117
+int 0x10
+
+; vbe mode switching error checking
+cmp ax, 0x004F
+je VBE_SUCCESS
+
+VBE_ERROR:
+    mov ax, 0x0003
+    int 0x10
+
+    mov ah, 0x0E
+    mov al, 'E'
+    int 0x10
+
+    hlt
+    jmp $
+
+VBE_SUCCESS:
 
 CODE_SEG equ GDT_code - GDT_Start
 DATA_SEG equ GDT_data - GDT_Start
@@ -76,45 +99,6 @@ GDT_Descriptor:
 
 [bits 32]
 
-; Functions
-clear_screen:
-    pusha
-    mov ebx, 0xB8000
-    mov al, ' '
-    mov ah, 0x0F
-.clear_loop:
-    cmp ebx, 0xB8000+2000
-    je .clear_return
-
-    mov [ebx], ax
-
-    times 2 inc ebx
-    jmp .clear_loop
-.clear_return:
-    popa
-    ret
-
-print:
-    pusha
-    mov ebx, 0xB8000
-    mov ah, 0x0F
-.print_loop:
-    mov al, [si]
-    cmp al, 0
-    je .print_return
-
-    mov [ebx], ax
-
-    inc si
-    times 2 inc ebx
-
-    jmp .print_loop
-.print_return:
-    popa
-    ret
-
-
-
 start_protected_mode:
     mov ax, DATA_SEG
     mov ds, ax
@@ -125,15 +109,10 @@ start_protected_mode:
     mov ebp, 0x90000
     mov esp, ebp
 
-    ;mov si, msg
-    ;call print
-    
     jmp KERNEL_LOCATION
 
     hlt
     jmp $
-
-;msg: db "Successfully switched to 32-bit protected mode!", 0
 
 times 510-($-$$) db 0
 dw 0xAA55

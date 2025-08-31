@@ -5,11 +5,8 @@
 #include "font8x8_basic.h"
 
 #define VGA_MEMORY_BASE          0xA0000
-#define VGA_WIDTH                640
-#define VGA_HEIGHT               480
-
-#define VGA_INDEX_REGISTER         0x3CE
-#define VGA_GRAPHICS_DATA_REGISTER 0x3CF
+#define VGA_WIDTH                320
+#define VGA_HEIGHT               200
 
 extern uint8_t *video_buffer;
 extern uint8_t video_x;
