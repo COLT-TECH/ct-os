@@ -39,4 +39,4 @@ qemu:
 	@nasm $(ZEROS) -f bin -o build/zeros.bin
 	@cat build/full.bin build/zeros.bin > build/os.bin
 
-	@qemu-system-x86_64 -drive format=raw,file="build/os.bin",index=0,if=floppy, -m 128M
+	@qemu-system-x86_64 -drive format=raw,file="build/os.bin",index=0,if=floppy, -m 128M -vga std

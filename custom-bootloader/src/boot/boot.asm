@@ -24,9 +24,9 @@ mov cl, 0x02
 mov dl, [BOOT_DISK]
 int 0x13
 
-; switch to text mode
-mov ah, 0x0
-mov ax, 0x13
+; switch to mode 12h
+mov ah, 0x00
+mov al, 0x12
 int 0x10
 
 
