@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 #include "include/svga.h"
+#include "include/interrupts.h"
 
 extern void kernel_main() {
     svga_init();

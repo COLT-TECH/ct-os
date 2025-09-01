@@ -2,29 +2,33 @@
 #define INTERRUPTS_H
 
 #include <stdint.h>
+#include "io.h"
 
 typedef struct {
-    uint16_t isr_low;
-    uint16_t kernel_cs;
-    uint8_t reserved;
-    uint8_t attributes;
-    uint16_t isr_high;
-} __attribute__((packed)) idt_entry_t;
-
+    uint16_t offset_low;
+    uint16_t selector;
+    uint8_t zero;
+    uint8_t type_attr;
+    uint16_t offset_high;
+} __attribute__((packed)) idt_entry;
 
 typedef struct {
     uint16_t limit;
     uint32_t base;
-} __attribute__((packed)) idtr_t;
+} __attribute__((packed)) idt_ptr;
 
 
-__attribute__((aligned(0x10)))
-static idt_entry_t idt[256];
 
-static idtr_t idtr;
+void set_idt_entry(int num, uint32_t handler, uint16_t sel, uint8_t flags);
+void init_idt(void);
+void irq_enable(uint8_t irq);
 
-extern void exception_handler(void);
-void idt_set_descriptor(uint8_t vector, void* isr, uint8_t flags);
+void init_pic(void);
+
+// C interrupt handlers
+void keyboard_interrupt_handler(void);
+
+// Assembly handlers
+extern void keyboard_handler_asm(void);
 
 #endif
-

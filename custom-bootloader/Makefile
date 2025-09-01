@@ -7,11 +7,14 @@ ZEROS = src/boot/zeros.asm
 
 USB = /dev/sda
 
-LIBOBJ = "build/svga.o" "build/font.o"
+LIBOBJ = "build/svga.o" "build/font.o" "build/interrupts.o" "build/interrupt_asm.o" "build/io.o"
 
 default:
 	@i386-elf-gcc $(CFLAGS) -c src/lib/svga.c -o build/svga.o
-	@i386-elf-gcc $(CFLAGS) -c src/lib/font8x8_basic.c -o build/font.o
+	@i386-elf-gcc $(CFLAGS) -c src/lib/font8x8.c -o build/font.o
+	@i386-elf-gcc $(CFLAGS) -c src/lib/io.c -o build/io.o
+	@i386-elf-gcc $(CFLAGS) -c src/lib/interrupts.c -o build/interrupts.o
+	@nasm -f elf src/lib/interrupts.asm -o build/interrupt_asm.o
 
 	@i386-elf-gcc $(CFLAGS) -c $(KERNEL) -o build/kernel.o
 	@nasm $(KERNEL_ENTRY) -f elf -o build/kernel_entry.o
