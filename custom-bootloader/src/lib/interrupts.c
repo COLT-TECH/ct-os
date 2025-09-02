@@ -1,6 +1,6 @@
 #include "../include/interrupts.h"
 
-idt_entry idt[256];
+idt_entry idt[IDT_ENTRIES];
 idt_ptr idt_pointer;
 
 
@@ -13,11 +13,11 @@ void set_idt_entry(int num, uint32_t handler, uint16_t sel, uint8_t flags) {
 }
 
 void init_idt(void) {
-    idt_pointer.limit = (sizeof(idt_entry) * 255);
-    idt_pointer.base = (uint32_t)&idt;
+    idt_pointer.limit = (sizeof(idt_entry) * (IDT_ENTRIES - 1));
+    idt_pointer.base  = (uint32_t)&idt;
 
     // Clear all IDT entries
-    for (int i = 0; i < 256; i++) set_idt_entry(i, 0, 0, 0);
+    for (int i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, 0, 0, 0);
 
     // Setup keyboard interrupt (IRQ 1 = interrupt 33)
     set_idt_entry(33, (uint32_t)keyboard_handler_asm, 0x08, 0x8E);
@@ -67,6 +67,14 @@ void init_pic(void) {
     outb(0xA1, 0xFF);
 }
 
-void keyboard_interrupt_handler(void) {
-    return;
+void init_interrupts(void) {
+    // Initialise IDT PIC and enable IRQ1
+    init_idt();
+    init_pic();
+    irq_enable(1);
+
+    // Enable interrupts
+    __asm__ volatile("sti");
 }
+
+

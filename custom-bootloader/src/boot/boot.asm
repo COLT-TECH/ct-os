@@ -14,7 +14,7 @@ mov bp, 0x8000
 mov sp, bp
 
 mov bx, KERNEL_LOCATION
-mov dh, 20
+mov dh, 50 ; load 50 sectors (~25KB, each sector is 512 bytes)
 
 mov ah, 0x02
 mov al, dh
@@ -27,7 +27,7 @@ int 0x13
 ; get vbe mode information
 mov ax, 0x4F01
 mov cx, 0x0117
-mov di, 0x7E00
+mov di, 0x7E00 ; address to store mode info
 int 0x10
 
 ; switch to vbe mode 1024x768x16 (0x0117)

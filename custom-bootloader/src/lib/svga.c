@@ -16,22 +16,40 @@ void plot_pixel(int x, int y, uint16_t color) {
     framebuffer[(y*screen_width) + x] = color;
 }
 
-void plot_character_array(const char *array, int x, int y, uint16_t color) {
+
+// Plot a character with 8x8 bitmap font
+void plot_character_array_8x8(const char character, int x, int y, uint16_t color) {
     for (int array_y = 0; array_y < 8; array_y++) {
 
         for (int array_x = 0; array_x < 8; array_x++) {
 
-            if(array[array_y] & (1 << array_x)) {
-                plot_pixel(x + array_x, y + array_y, color);
+            if(font8x8[character][array_y] & (1 << array_x)) {
+                framebuffer[((y + array_y)*scanline) + (x + array_x)] = color;
             }
 
         }
     }
 }
 
+// Plot a character with 8x16 bitmap font
+void plot_character_array_8x16(const char character, int x, int y, uint16_t color) {
+    for (int array_y = 0; array_y < 16; array_y++) {
+
+        for (int array_x = 0; array_x < 8; array_x++) {
+
+            if(font8x16[character][array_y] & (1 << (7 - array_x))) {
+                framebuffer[((y + array_y)*screen_width) + (x + array_x)] = color;
+            }
+
+        }
+    }
+}
+
+
+// Plot a string
 void plot_string(const char *string, int x, int y) {
     while (*string != 0) {
-        plot_character_array(font8x8[*string], x, y, 0xFFFF);
+        plot_character_array_8x16(*string, x, y, 0xFFFF);
         x += 8;
         string++;
     }

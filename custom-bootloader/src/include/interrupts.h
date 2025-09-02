@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include "io.h"
 
+#define IDT_ENTRIES 256
+
 typedef struct {
     uint16_t offset_low;
     uint16_t selector;
@@ -25,8 +27,8 @@ void irq_enable(uint8_t irq);
 
 void init_pic(void);
 
-// C interrupt handlers
-void keyboard_interrupt_handler(void);
+void init_interrupts(void);
+
 
 // Assembly handlers
 extern void keyboard_handler_asm(void);
