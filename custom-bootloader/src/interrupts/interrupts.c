@@ -1,4 +1,4 @@
-#include "../include/interrupts.h"
+#include "interrupts.h"
 
 idt_entry idt[IDT_ENTRIES];
 idt_ptr idt_pointer;
@@ -43,8 +43,8 @@ void irq_enable(uint8_t irq) {
 
 
 void init_pic(void) {
-    uint8_t a1 = inb(0x21);
-    uint8_t a2 = inb(0xA1);
+    //uint8_t a1 = inb(0x21);
+    //uint8_t a2 = inb(0xA1);
 
     // Init master PIC
     outb(0x20, 0x11);

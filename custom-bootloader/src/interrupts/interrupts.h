@@ -2,7 +2,7 @@
 #define INTERRUPTS_H
 
 #include <stdint.h>
-#include "io.h"
+#include "../lib/io.h"
 
 #define IDT_ENTRIES 256
 

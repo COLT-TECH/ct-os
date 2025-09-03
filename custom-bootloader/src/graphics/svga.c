@@ -1,4 +1,4 @@
-#include "../include/svga.h"
+#include "svga.h"
 
 uint16_t *framebuffer;
 uint16_t scanline;
@@ -17,8 +17,29 @@ void plot_pixel(int x, int y, uint16_t color) {
 }
 
 
+void plot_box(int x, int y, int width, int height, uint16_t color) {
+    for (int i = 0; i < height; i++) {
+        for (int u = 0; u < width; u++) {
+            plot_pixel(x + u, y + i, color);
+        }
+    }
+}
+
+
+void plot_box_outline(int x, int y, int width, int height, uint16_t color) {
+    for (int i = 0; i < (width + 1); i++) {
+        plot_pixel(x + i, y, color);
+        plot_pixel(x + i, y + height, color);
+    }
+    for (int i = 0; i < height; i++) {
+        plot_pixel(x, y + i, color);
+        plot_pixel(x + width, y + i, color);
+    }
+}
+
+
 // Plot a character with 8x8 bitmap font
-void plot_character_array_8x8(const char character, int x, int y, uint16_t color) {
+void plot_character_array_8x8(const uint8_t character, int x, int y, uint16_t color) {
     for (int array_y = 0; array_y < 8; array_y++) {
 
         for (int array_x = 0; array_x < 8; array_x++) {
@@ -32,7 +53,7 @@ void plot_character_array_8x8(const char character, int x, int y, uint16_t color
 }
 
 // Plot a character with 8x16 bitmap font
-void plot_character_array_8x16(const char character, int x, int y, uint16_t color) {
+void plot_character_array_8x16(const uint8_t character, int x, int y, uint16_t color) {
     for (int array_y = 0; array_y < 16; array_y++) {
 
         for (int array_x = 0; array_x < 8; array_x++) {

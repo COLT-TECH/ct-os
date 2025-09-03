@@ -1,4 +1,4 @@
-#include "../include/font8x8.h"
+#include "font8x8.h"
 
 const char font8x8[128][8] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},   // U+0000 (nul)

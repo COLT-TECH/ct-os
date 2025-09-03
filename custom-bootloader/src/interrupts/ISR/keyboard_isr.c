@@ -1,4 +1,4 @@
-#include "../include/keyboard_isr.h"
+#include "keyboard_isr.h"
 
 char scancode_to_ascii(uint8_t scancode) {
     static char ascii_table[] = {
@@ -24,10 +24,10 @@ char scancode_to_ascii(uint8_t scancode) {
 
 uint8_t key_states[128];
 uint8_t key_down = false;
+uint8_t scancode;
 
 void keyboard_interrupt_handler(void) {
-    uint8_t scancode = inb(0x60);
-
+    scancode = inb(0x60);
 
     if (scancode & 0x80) {
         key_states[scancode & 0x7F] = 0;
