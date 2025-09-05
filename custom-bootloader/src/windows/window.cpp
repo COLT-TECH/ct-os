@@ -1,6 +1,8 @@
-#include "windows.hpp"
+#include "window.hpp"
 
-Window::Window(int init_x, int init_y, int init_width, int init_height, uint16_t color) {
+Window::Window() {}
+
+void Window::init(int init_x, int init_y, int init_width, int init_height, uint16_t color) {
     x = init_x;
     y = init_y;
     width = init_width;
@@ -15,8 +17,6 @@ Window::Window(int init_x, int init_y, int init_width, int init_height, uint16_t
 
 void Window::update() {
     if (!shown) {
-        active_window = false;
-        saved_color = color;
         color = 0x0000;
         plot_box(x-2, y-2, width+2, height+2, color);
     }
@@ -49,10 +49,5 @@ void Window::update() {
         plot_box(x, y, width, height, color);
     }
 
-    if (key_states[ENTER]) {
-        shown = false;
-    }
-    if (key_states[BACKSPACE]) {
-        shown = true;
-    }
+    
 }

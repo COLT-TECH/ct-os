@@ -6,7 +6,7 @@
 
 extern "C" {
     #include "../interrupts/ISR/keyboard_isr.h"
-    #include "svga.h"
+    #include "../graphics/svga.h"
 }
 
 class Window {
@@ -23,7 +23,9 @@ class Window {
         bool active_window;
         bool shown;
 
-        Window(int x, int y, int width, int height, uint16_t color);
+        Window();
+
+        void init(int init_x, int init_y, int init_width, int init_height, uint16_t color);
 
         void update();
 };

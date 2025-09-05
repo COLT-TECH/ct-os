@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 // C++ includes
-#include "graphics/windows.hpp"
+#include "windows/window.hpp"
 
 // C includes
 extern "C" {
@@ -11,6 +11,11 @@ extern "C" {
     #include "interrupts/ISR/keyboard_isr.h"
 }
 
+// Window manager things
+// which window is the active window
+// which windows are rendered
+// how do you handle overlapping windows
+
 extern "C" void kernel_main() {
 
     svga_init();
@@ -18,10 +23,19 @@ extern "C" void kernel_main() {
 
     plot_string("Hello World!\0", 0, 0);
 
-    Window window(200, 200, 200, 200, 0x001F);
+    Window windows[10];
+
+    windows[0].init(200, 200, 200, 200, 0x001F);
 
     while (1) {
-        window.update();
+        windows[0].update();
+
+        if ((key_down && key_states[ENTER]) && windows[0].shown) {
+            windows[0].shown = false;
+        }
+        if ((key_down && key_states[BACKSPACE]) && !windows[0].shown) {
+            windows[0].shown = true;
+        }
     }
 
     return;
