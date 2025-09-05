@@ -11,6 +11,9 @@ void svga_init() {
     screen_width = *(uint16_t*)(0x7E00 + 18);
 }
 
+void clear_screen() {
+    for (int i = 0; i < (SCREEN_WIDTH*SCREEN_HEIGHT); i++) framebuffer[i] = 0x0000;
+}
 
 void plot_pixel(int x, int y, uint16_t color) {
     framebuffer[(y*screen_width) + x] = color;

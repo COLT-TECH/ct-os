@@ -7,8 +7,16 @@
 
 #define CHAR_SCREEN_WIDTH  128
 #define CHAR_SCREEN_HEIGHT 48 // 48 when using 8x16 font, 96 if using 8x8 font
+#define SCREEN_WIDTH  1024
+#define SCREEN_HEIGHT 768
+
+typedef struct {
+    float x;
+    float y;
+} Point;
 
 void svga_init();
+void clear_screen();
 void plot_pixel(int x, int y, uint16_t color);
 void plot_box(int x, int y, int width, int height, uint16_t color);
 void plot_box_outline(int x, int y, int width, int height, uint16_t color);

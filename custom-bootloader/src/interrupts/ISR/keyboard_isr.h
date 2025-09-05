@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "../../lib/io.h"
-#include "../../graphics/svga.h"
 
 #define ESCAPE      0x01
 #define F1          0x3B

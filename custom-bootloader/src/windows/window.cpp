@@ -45,6 +45,11 @@ void Window::update() {
             x++;
         }
 
+        if (x <= 1) x = 1;
+        if ((x + width) >= SCREEN_WIDTH) x = (SCREEN_WIDTH - width) - 1;
+        if (y <= 1) y = 1;
+        if ((y + height) >= SCREEN_HEIGHT) y = (SCREEN_HEIGHT - height) - 1;
+
 
         plot_box(x, y, width, height, color);
     }

@@ -7,13 +7,16 @@ BOOTLOADER = src/boot/boot.asm
 
 USB = /dev/sda
 
-COBJ = "build/svga.o" "build/interrupts.o" "build/interrupt_asm.o" "build/io.o" "build/keyboard_isr.o" "build/font8x8.o" "build/font8x16.o"
+COBJ = "build/svga.o" "build/interrupts.o" "build/interrupt_asm.o" "build/io.o" "build/keyboard_isr.o" "build/font8x8.o" "build/font8x16.o" "build/cursor.o"
 CPPOBJ = "build/windows.o"
 
 default:
 	@# GENERAL CODE
 	@i386-elf-gcc $(CFLAGS) -c src/graphics/svga.c -o build/svga.o
 	@i386-elf-gcc $(CFLAGS) -c src/lib/io.c -o build/io.o
+	
+	@# INPUT
+	@i386-elf-gcc $(CFLAGS) -c src/input/cursor.c -o build/cursor.o
 
 	@# INTERRUPTS CODE
 	@i386-elf-gcc $(CFLAGS) -c src/interrupts/interrupts.c -o build/interrupts.o
@@ -25,7 +28,7 @@ default:
 	@i386-elf-gcc $(CFLAGS) -c src/fonts/font8x16.c -o build/font8x16.o
 	
 	@# C++
-	@i386-elf-g++ $(CPPFLAGS) -c src/graphics/windows.cpp -o build/windows.o
+	@i386-elf-g++ $(CPPFLAGS) -c src/windows/window.cpp -o build/windows.o
 
 	@# KERNEL
 	@i386-elf-g++ $(CPPFLAGS) -c $(KERNEL) -o build/kernel.o
