@@ -1,7 +1,10 @@
 #include <stddef.h>
 #include <stdint.h>
+
+// C++ includes
 #include "graphics/windows.hpp"
 
+// C includes
 extern "C" {
     #include "graphics/svga.h"
     #include "interrupts/interrupts.h"
@@ -17,19 +20,7 @@ extern "C" void kernel_main() {
 
     Window window(200, 200, 200, 200, 0x001F);
 
-    int x = 0;
-
     while (1) {
-
-        if (key_down && key_states[ENTER] && window.shown) {
-            window.shown = false;
-        }
-
-        if (key_down && key_states[BACKSPACE] && !window.shown) {
-            window.shown = true;
-            window.active_window = true;
-        }
-
         window.update();
     }
 

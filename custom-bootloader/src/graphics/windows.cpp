@@ -16,8 +16,9 @@ Window::Window(int init_x, int init_y, int init_width, int init_height, uint16_t
 void Window::update() {
     if (!shown) {
         active_window = false;
+        saved_color = color;
         color = 0x0000;
-        plot_box(x-2, y-2, width+4, height+4, color);
+        plot_box(x-2, y-2, width+2, height+2, color);
     }
     else {
         color = saved_color;
@@ -25,25 +26,33 @@ void Window::update() {
 
     if (key_down && active_window) {
 
-        plot_box_outline(x-1, y-1, width+2, height+2, 0x0000);
+        plot_box_outline(x-1, y-1, width+1, height+1, 0x0000);
 
         // 0x11 = W
-        if (key_down && key_states[0x11]) {
+        if (key_states[W]) {
             y--;
         }
         // 0x1E = A
-        if (key_down && key_states[0x1E]) {
+        if (key_states[A]) {
             x--;
         }
         // 0x1F = S
-        if (key_down && key_states[0x1F]) {
+        if (key_states[S]) {
             y++;
         }
         // 0x20 = D
-        if (key_down && key_states[0x20]) {
+        if (key_states[D]) {
             x++;
         }
 
+
         plot_box(x, y, width, height, color);
+    }
+
+    if (key_states[ENTER]) {
+        shown = false;
+    }
+    if (key_states[BACKSPACE]) {
+        shown = true;
     }
 }

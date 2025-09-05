@@ -24,10 +24,9 @@ char scancode_to_ascii(uint8_t scancode) {
 
 uint8_t key_states[128];
 uint8_t key_down = false;
-uint8_t scancode;
 
 void keyboard_interrupt_handler(void) {
-    scancode = inb(0x60);
+    uint8_t scancode = inb(0x60);
 
     if (scancode & 0x80) {
         key_states[scancode & 0x7F] = 0;
