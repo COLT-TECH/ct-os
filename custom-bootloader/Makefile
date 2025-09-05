@@ -63,3 +63,8 @@ qemu:
 	@rm build/full.bin build/zeros.bin
 
 	@qemu-system-x86_64 -vga std -drive format=raw,file="build/qemu.bin",index=0,if=floppy, -m 128M
+
+git-acp:
+	@git add *
+	@git commit -m "."
+	@git push
