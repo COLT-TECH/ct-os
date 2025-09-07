@@ -14,7 +14,7 @@ mov bp, 0x8000
 mov sp, bp
 
 mov bx, KERNEL_LOCATION
-mov dh, 50 ; load 50 sectors (~25KB, each sector is 512 bytes)
+mov dh, 54 ; load 50 sectors (~25KB, each sector is 512 bytes)
 
 mov ah, 0x02
 mov al, dh

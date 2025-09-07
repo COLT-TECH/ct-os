@@ -9,9 +9,10 @@
 typedef struct {
     float x;
     float y;
-    int width;
-    int height;
+    int size;
+    int radius;
     float sensitivity;
+    uint16_t color;
 } Cursor;
 
 extern Cursor cursor;
