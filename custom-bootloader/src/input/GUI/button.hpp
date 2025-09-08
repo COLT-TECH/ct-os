@@ -11,6 +11,8 @@ extern "C" {
     #include "../../interrupts/ISR/keyboard_isr.h"
 }
 
+typedef void (*func_ptr)();
+
 class Button {
 private:
     bool cursor_hovering;
@@ -23,11 +25,11 @@ private:
     char *text;
     int text_len;
 
-    void (*func_ptr)();
+    func_ptr button_function;
 public:
     Button();
 
-    void init(int init_x, int init_y, int init_width, int init_height, uint16_t init_color, void (*func_ptr)(), char *init_text);
+    void init(int init_x, int init_y, int init_width, int init_height, uint16_t init_color, func_ptr init_button_function, char *init_text);
     void update();
 };
 
