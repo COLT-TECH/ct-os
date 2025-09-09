@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 // C++ includes
 #include "input/GUI/button.hpp"
@@ -26,17 +27,23 @@ extern "C" void kernel_main() {
     svga_init();
     init_interrupts();
 
-    Button button[10];
+    Button button[3];
 
-    button[0].init(520, 350, NULL, NULL, 0x001F, say_bye, "Bye\0");
-    button[1].init(100, 100, NULL, NULL, 0x001F, say_hello, "Hello\0");
+    button[0].init(100, 100, NULL, NULL, 0x001F, say_hello, "Hello\0");
+    button[1].init(200, 100, NULL, NULL, 0x001F, say_bye, "Bye\0");
+    button[2].init(300, 100, NULL, NULL, 0x001F, clear_screen, "Clear Screen\0");
+
+    int counter = 0;
 
     while (1) {
-        button[0].update();
-        button[1].update();
 
+        for (int i = 0; i < 100; i++) {
+            if (!button[i].initialized) break;
+            else button[i].update();
+        }
 
         _cursor();
+
         write_buffer();
     }
 

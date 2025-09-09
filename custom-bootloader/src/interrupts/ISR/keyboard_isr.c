@@ -26,6 +26,7 @@ uint8_t key_states[128];
 uint8_t key_down = false;
 
 void keyboard_interrupt_handler(void) {
+
     uint8_t scancode = inb(0x60);
 
     if (scancode & 0x80) {
@@ -34,7 +35,6 @@ void keyboard_interrupt_handler(void) {
     else {
         key_states[scancode] = 1;
     }
-
 
     int key_down_count = 0;
     for (int i = 0; i < 128; i++) {

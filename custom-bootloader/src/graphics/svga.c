@@ -20,11 +20,11 @@ void svga_init() {
 }
 
 void write_buffer() {
-    for (int i = 0; i < (SCREEN_WIDTH*SCREEN_HEIGHT); i++) video_memory[i] = framebuffer[i];
+    memcpy(framebuffer, video_memory, (SCREEN_WIDTH*SCREEN_HEIGHT) * 2);
 }
 
-void clear_screen(uint16_t color) {
-    for (int i = 0; i < (SCREEN_WIDTH*SCREEN_HEIGHT); i++) framebuffer[i] = color;
+void clear_screen() {
+    for (int i = 0; i < (SCREEN_WIDTH*SCREEN_HEIGHT); i++) framebuffer[i] = 0x2104;
 }
 
 uint16_t get_pixel(int x, int y) {

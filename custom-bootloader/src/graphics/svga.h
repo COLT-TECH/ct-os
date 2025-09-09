@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "../fonts/font8x8.h"
 #include "../fonts/font8x16.h"
+#include "../lib/io.h"
 
 #define CHAR_SCREEN_WIDTH  128
 #define CHAR_SCREEN_HEIGHT 48 // 48 when using 8x16 font, 96 if using 8x8 font
@@ -20,7 +21,7 @@ extern uint16_t *framebuffer;
 
 void svga_init();
 void write_buffer();
-void clear_screen(uint16_t color);
+void clear_screen();
 uint16_t get_pixel(int x, int y);
 void plot_pixel(int x, int y, uint16_t color);
 void plot_box(int x, int y, int width, int height, uint16_t color);

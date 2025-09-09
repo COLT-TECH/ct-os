@@ -22,6 +22,7 @@ void Button::init(int init_x, int init_y, int init_width, int init_height, uint1
     button_function = init_button_function;
     text = init_text;
     text_len = strlen(text);
+    initialized = true;
 
     if (width == NULL && height == NULL) {
         width = (text_len*8) + 10;
@@ -40,7 +41,7 @@ void Button::update() {
     }
     else cursor_hovering = true;
 
-    if (cursor_hovering) {
+    if (cursor_hovering || get_pixel(x, y) != color) {
         plot_box(x, y, width, height, color);
 
         text_len = strlen(text);
