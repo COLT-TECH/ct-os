@@ -23,7 +23,9 @@ void svga_init();
 void write_buffer();
 void clear_screen();
 uint16_t get_pixel(int x, int y);
-void plot_pixel(int x, int y, uint16_t color);
+//void plot_pixel(int x, int y, uint16_t color);
+void plot_pixels(uint16_t *dest, uint16_t value, size_t count);
+void plot_pixels_vertical(uint16_t *start, uint16_t color, int height);
 void plot_box(int x, int y, int width, int height, uint16_t color);
 void plot_box_outline(int x, int y, int width, int height, float thickness, uint16_t color);
 

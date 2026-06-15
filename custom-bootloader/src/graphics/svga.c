@@ -1,4 +1,6 @@
 #include "svga.h"
+#include <stddef.h>
+#include <stdint.h>
 
 extern uint8_t _kernel_end[];
 
@@ -20,41 +22,67 @@ void svga_init() {
 }
 
 void write_buffer() {
-    memcpy(framebuffer, video_memory, (SCREEN_WIDTH*SCREEN_HEIGHT) * 2);
+    uint16_t *src = framebuffer;
+    uint16_t *dst = video_memory;
+
+    for (int i = 0; i < SCREEN_HEIGHT; ++i) {
+        memcpy(src, dst, (size_t)SCREEN_WIDTH * 2);
+        src += SCREEN_WIDTH;
+        dst += SCREEN_WIDTH;
+    }
 }
 
 void clear_screen() {
-    for (int i = 0; i < (SCREEN_WIDTH*SCREEN_HEIGHT); i++) framebuffer[i] = 0x2104;
+    plot_pixels(framebuffer, 0x2104, (SCREEN_HEIGHT*SCREEN_WIDTH) * 2);
 }
 
 uint16_t get_pixel(int x, int y) {
     return framebuffer[(y*SCREEN_WIDTH) + x];
 }
 
-void plot_pixel(int x, int y, uint16_t color) {
-    framebuffer[(y*SCREEN_WIDTH) + x] = color;
+void plot_pixels(uint16_t *dest, uint16_t value, size_t count) {
+    uint32_t v32 = ((uint32_t)value << 16) | value;
+    uint32_t *d = (uint32_t*)dest;
+    size_t words = count / 2;
+
+    while (words--) {
+        *d++ = v32;
+    }
+
+    if (count & 1) {
+        dest[count-1] = value;
+    }
 }
 
+void plot_pixels_vertical(uint16_t *start, uint16_t color, int height) {
+    uint16_t *p = start;
+    for (int i = 0; i < height; i++) {
+        *p = color;
+        p += SCREEN_WIDTH;
+    }
+}
 
 void plot_box(int x, int y, int width, int height, uint16_t color) {
+    uint16_t *position = framebuffer + (y * SCREEN_WIDTH) + x;
+
     for (int i = 0; i < height; i++) {
-        for (int u = 0; u < width; u++) {
-            plot_pixel(x + u, y + i, color);
-        }
+        plot_pixels(position, color, width);
+        position += SCREEN_WIDTH;
     }
 }
 
 
 void plot_box_outline(int x, int y, int width, int height, float thickness, uint16_t color) {
+    uint16_t *position = framebuffer + (y * SCREEN_WIDTH) + x;
+
     for (int p = 0; p < thickness; p++) {
-        for (int i = 0; i < (width + 1); i++) {
-            plot_pixel(x + i, (y+p), color);
-            plot_pixel(x + i, (y-p) + height, color);
-        }
-        for (int i = 0; i < height; i++) {
-            plot_pixel((x+p), y + i, color);
-            plot_pixel((x-p) + width, y + i, color);
-        }
+        plot_pixels(position + (p*SCREEN_WIDTH), color, width);
+        plot_pixels((position + (height*SCREEN_WIDTH)) - (p*SCREEN_WIDTH), color, width+1);
+    }
+
+    for (int p = 0; p < thickness; p++) {
+        plot_pixels_vertical(position, color, height);
+        plot_pixels_vertical(position + width, color, height);
     }
 }
 

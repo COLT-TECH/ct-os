@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 extern "C" {
-    #include "../cursor.h"
+    #include "./cursor.h"
     #include "../../graphics/svga.h"
     #include "../../interrupts/ISR/keyboard_isr.h"
 }
@@ -34,6 +34,7 @@ public:
 
     void init(int init_x, int init_y, int init_width, int init_height, uint16_t init_color, func_ptr init_button_function, char *init_text);
     void update();
+    void deinit();
 };
 
 #endif
