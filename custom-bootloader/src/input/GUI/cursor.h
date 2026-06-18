@@ -17,6 +17,6 @@ typedef struct {
 
 extern Cursor cursor;
 
-void _cursor();
+void update_cursor();
 
 #endif

@@ -6,9 +6,10 @@
 #include <stdbool.h>
 
 extern "C" {
-    #include "./cursor.h"
-    #include "../../graphics/svga.h"
-    #include "../../interrupts/ISR/keyboard_isr.h"
+    #include "../cursor.h"
+    #include "../../../graphics/svga.h"
+    #include "../../../interrupts/ISR/keyboard_isr.h"
+    #include "../../../lib/stdlib.h"
 }
 
 typedef void (*func_ptr)();

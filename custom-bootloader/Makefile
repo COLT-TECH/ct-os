@@ -13,17 +13,10 @@ BOOTLOADER   = src/boot/boot.asm
 
 USB = /dev/sda
 
-COBJ   = "build/svga.o" "build/interrupts.o" "build/interrupt_asm.o" "build/io.o" "build/keyboard_isr.o" "build/font8x8.o" "build/font8x16.o" "build/cursor.o"
-CPPOBJ = "build/button.o" "build/button_manager.o"
+COBJ   = "build/svga.o" "build/interrupts.o" "build/interrupt_asm.o" "build/io.o" "build/keyboard_isr.o" "build/font8x8.o" "build/font8x16.o" "build/cursor.o" "build/stdlib.o"
+CPPOBJ = "build/button.o" "build/button_manager.o" "build/GUI_Runtime.o"
 
 default:
-	@# GENERAL CODE
-	@$(CC) $(CFLAGS) -c src/graphics/svga.c -o build/svga.o
-	@$(CC) $(CFLAGS) -c src/lib/io.c -o build/io.o
-	
-	@# INPUT
-	@$(CC) $(CFLAGS) -c src/input/GUI/cursor.c -o build/cursor.o
-
 	@# INTERRUPTS CODE
 	@$(CC) $(CFLAGS) -c src/interrupts/interrupts.c -o build/interrupts.o
 	@$(AS) -f elf32 src/interrupts/interrupts.asm -o build/interrupt_asm.o
@@ -32,23 +25,26 @@ default:
 	@# FONTS
 	@$(CC) $(CFLAGS) -c src/fonts/font8x8.c -o build/font8x8.o
 	@$(CC) $(CFLAGS) -c src/fonts/font8x16.c -o build/font8x16.o
+
+	@# C
+	@$(CC) $(CFLAGS) -c src/graphics/svga.c -o build/svga.o
+	@$(CC) $(CFLAGS) -c src/lib/io.c -o build/io.o
+	@$(CC) $(CFLAGS) -c src/input/GUI/cursor.c -o build/cursor.o
+	@$(CC) $(CFLAGS) -c src/lib/stdlib.c -o build/stdlib.o
 	
 	@# C++
-	@$(CXX) $(CPPFLAGS) -c src/input/GUI/button.cpp -o build/button.o
-	@$(CXX) $(CPPFLAGS) -c src/input/GUI/button_manager.cpp -o build/button_manager.o
+	@$(CXX) $(CPPFLAGS) -c src/input/GUI/buttons/button.cpp -o build/button.o
+	@$(CXX) $(CPPFLAGS) -c src/input/GUI/buttons/button_manager.cpp -o build/button_manager.o
+	@$(CXX) $(CPPFLAGS) -c src/input/GUI/GUI_Runtime.cpp -o build/GUI_Runtime.o
 
 	@# KERNEL
 	@$(CXX) $(CPPFLAGS) -c $(KERNEL) -o build/kernel.o
-
 	@$(AS) -f elf32 $(KERNEL_ENTRY) -o build/kernel_entry.o
-	
 	@$(LD) -T src/boot/linker.ld -o "build/kernel.elf" "build/kernel_entry.o" "build/kernel.o" $(COBJ) $(CPPOBJ)
-
 	@$(OBJCPY) -O binary build/kernel.elf build/kernel.bin
 	
 	@# BOOTLOADER
 	@$(AS) $(BOOTLOADER) -f bin -o build/bootloader.bin
-	
 	@rm build/*.o
 
 write:

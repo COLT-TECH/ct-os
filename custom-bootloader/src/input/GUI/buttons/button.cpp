@@ -1,28 +1,17 @@
 #include "./button.hpp"
 
-int strlen(char *string) {
-    int length = 0;
-
-    while (*string != 0) {
-        length++;
-        string++;
-    }
-
-    return length;
-}
-
 Button::Button() {}
 
 void Button::init(int init_x, int init_y, int init_width, int init_height, uint16_t init_color, func_ptr init_button_function, char *init_text) {
-    x      = init_x;
-    y      = init_y;
-    width  = init_width;
-    height = init_height;
-    color  = init_color;
+    x               = init_x;
+    y               = init_y;
+    width           = init_width;
+    height          = init_height;
+    color           = init_color;
     button_function = init_button_function;
-    text = init_text;
-    text_len = strlen(text);
-    initialized = true;
+    text            = init_text;
+    text_len        = strlen(text);
+    initialized     = true;
 
     if (width == 0 && height == 0) {
         width = (text_len*8) + 10;

@@ -1,9 +1,9 @@
 #include "cursor.h"
 
 //                     X               Y        SIZE RAD SENS COLOR
-Cursor cursor = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 4, 2,  0.5,  0xF0F9};
+Cursor cursor = {SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 4, 2,  10,  0xF0F9};
 
-void _cursor() {
+void update_cursor() {
 
     if (key_down) {
         plot_box((cursor.x/1) - cursor.radius, (cursor.y/1) - cursor.radius, cursor.size, cursor.size, 0x2104);

@@ -32,10 +32,6 @@ void write_buffer() {
     }
 }
 
-void clear_screen() {
-    plot_pixels(framebuffer, 0x2104, (SCREEN_HEIGHT*SCREEN_WIDTH) * 2);
-}
-
 uint16_t get_pixel(int x, int y) {
     return framebuffer[(y*SCREEN_WIDTH) + x];
 }
@@ -60,6 +56,10 @@ void plot_pixels_vertical(uint16_t *start, uint16_t color, int height) {
         *p = color;
         p += SCREEN_WIDTH;
     }
+}
+
+void clear_screen() {
+    plot_pixels(framebuffer, 0x2104, (SCREEN_HEIGHT*SCREEN_WIDTH) * 2);
 }
 
 void plot_box(int x, int y, int width, int height, uint16_t color) {
